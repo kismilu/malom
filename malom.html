@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Projekt</title>
+    <style>
+        body {margin: 0; overflow: hidden}
+        canvas { width: 100%; height: 100% }
+    </style>
+</head>
+<body onload = "init()" >
+    <script src ="js/three.js" > </script>
+    <script src ="js/TrackballControls.js" > </script>
+
+    <script>
+
+        var WIDTH, HEIGHT, aspectratio;
+        var renderer;
+        var kamera;
+        var controls;
+        var scene;
+        var talajgeo, talajmaterial, talajmesh;
+        var hengergeo, hengermaterial, hengermesh;
+        var kupgeo,kupmaterial,kupmesh;
+        var tengeo, tenmaterial, tenmesh;
+        var lapgeo, lapmaterial, lapmesh;
+        var lap1geo, lap1material, lap1mesh;
+
+        function init() {
+
+            WIDTH = window.innerWidth;
+            HEIGHT = window.innerHeight;
+            aspectratio = WIDTH/HEIGHT;
+
+
+            renderer = new THREE.WebGLRenderer( { antialias : true });
+            renderer.setSize(WIDTH,HEIGHT);
+            renderer.setClearColor(0x440000);
+            document.body.appendChild( renderer.domElement );
+            renderer.shadowMap.enabled = true;
+
+            scene = new THREE.Scene();
+
+            kamera = new THREE.PerspectiveCamera( 75, aspectratio, 0.1, 1000);
+            kamera.position.z = 30;
+            kamera.position.y = 25;
+            kamera.position.x = -25;
+
+            var pLight = new THREE.PointLight( 0xffffff, 1 );
+            pLight.position.set( -10, 20, -7.5 );
+            pLight.castShadow=true;
+            scene.add( pLight );
+
+            var ambientLight = new THREE.AmbientLight( 0xffffff, 0.2 );
+            scene.add( ambientLight );
+
+            var sphereSize = 0.2;
+            var pointLightHelper = new THREE.PointLightHelper( pLight, sphereSize );
+            scene.add( pointLightHelper );
+
+
+
+
+
+            controls = new THREE.TrackballControls(kamera, renderer.domElement);
+            controls.panSpeed= 1.0;
+            controls.rotateSpeed = 5.0;
+
+            talajgeo = new THREE.PlaneGeometry(50,50);
+            talajmaterial = new THREE.MeshLambertMaterial( { color:0x00aa00,  wireframe: false, side: THREE.DoubleSide } );
+            talajmesh = new THREE.Mesh(talajgeo,talajmaterial);
+            talajmesh.rotation.x = -1*THREE.Math.degToRad(90);
+            talajmesh.position.y = 4;
+            talajmesh.receiveShadow=true;
+            scene.add(talajmesh);
+
+            hengergeo = new THREE.CylinderGeometry(5,5,11,10);
+            hengermaterial = new THREE.MeshPhongMaterial( {color : 0x668888, wireframe : false});
+            hengermesh = new THREE.Mesh (hengergeo,hengermaterial);
+            hengermesh.position.y = 9.5;
+            hengermesh.castShadow = true;
+            hengermesh.receiveShadow = true;
+            scene.add(hengermesh);
+
+            kupgeo = new THREE.ConeGeometry(5.4 , 5 , 10);
+            kupmaterial = new THREE.MeshPhongMaterial({color : 0x880022, wireframe : false});
+            kupmesh = new THREE.Mesh(kupgeo,kupmaterial);
+            kupmesh.position.y= 17.5;
+            kupmesh.castShadow = true;
+            kupmesh.receiveShadow = true;
+            scene.add(kupmesh);
+
+            tengeo = new THREE.ConeGeometry(1 , 2 , 4);
+            tenmaterial = new THREE.MeshPhongMaterial({color : 0xff0000, wireframe : false});
+            tenmesh = new THREE.Mesh(tengeo,tenmaterial);
+            tenmesh.position.y = 13;
+            tenmesh.position.x = -5.5;
+            tenmesh.rotation.z = THREE.Math.degToRad(90);
+            scene.add(tenmesh);
+
+            lapgeo = new THREE.BoxGeometry(0.2,16,2);
+            lapmaterial = new THREE.MeshPhongMaterial( {color : 0x0022bb, wireframe: false });
+            lapmesh = new THREE.Mesh(lapgeo,lapmaterial);
+            lapmesh.position.set(-6,13,0);
+            lapmesh.castShadow = true;
+            lapmesh.receiveShadow = true;
+            scene.add(lapmesh);
+
+            lap1geo = new THREE.BoxGeometry(0.2,16,2);
+            lap1material = new THREE.MeshPhongMaterial( {color : 0x0022bb, wireframe: false });
+            lap1mesh = new THREE.Mesh(lap1geo,lap1material);
+            lap1mesh.position.set(-6,13,0);
+            lap1mesh.rotation.x = THREE.Math.degToRad(90);
+            lap1mesh.castShadow = true;
+            lap1mesh.receiveShadow = true;
+            scene.add(lap1mesh);
+
+
+
+
+            var axisHelper = new THREE.AxisHelper( 10 );
+            scene.add( axisHelper );
+
+
+            window.addEventListener('resize', handleResize(), true);
+
+            render();
+
+
+        }
+
+        function handleResize() {
+            WIDTH = window.innerWidth;
+            HEIGHT = window.innerHeight;
+            renderer.setSize(WIDTH,HEIGHT);
+            aspectratio = WIDTH /HEIGHT;
+            kamera.aspect=aspectratio;
+            kamera.updateProjectionMatrix();
+        }
+
+        var render = function() {
+            requestAnimationFrame(render);
+            controls.update();
+
+            lapmesh.rotation.x += 0.01;
+            lap1mesh.rotation.x += 0.01;
+
+            renderer.render(scene,kamera);
+
+        };
+
+
+
+
+
+    </script>
+
+
+
+</body>
+</html>
